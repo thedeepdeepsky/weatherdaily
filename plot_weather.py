@@ -7,7 +7,7 @@ from datetime import datetime
 
 # --- Configuration ---
 JSON_INPUT_FILE = 'weather_data.json'
-CHART_OUTPUT_FILE = 'weather_chart.png'
+CHART_OUTPUT_FILE = 'weather_chart_temperature.png'
 CHART_TITLE = 'Hourly Temperature Forecast (Shanghai)'
 X_LABEL = 'Time'
 Y_LABEL = 'Temperature (°C)'
