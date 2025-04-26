@@ -1,0 +1,69 @@
+name: Fetch Current Weather Data Hourly
+
+on:
+  # Allows manual triggering from the Actions tab
+  workflow_dispatch:
+
+  # Runs every hour at 5 minutes past the hour
+  # (Staggered slightly to avoid potential conflicts with other scheduled tasks)
+  schedule:
+    - cron: '5 * * * *'
+
+jobs:
+  fetch_and_commit_current_weather:
+    runs-on: ubuntu-latest
+    permissions:
+      # Need write permissions to commit the JSON file back to the repository
+      contents: write
+    steps:
+      - name: Checkout repository
+        # Checks out your repository under $GITHUB_WORKSPACE
+        uses: actions/checkout@v4
+
+      - name: Fetch current weather data
+        run: |
+          set -e # Exit immediately if a command exits with a non-zero status.
+
+          # Define the current weather variables needed
+          CURRENT_VARS="temperature_2m,relative_humidity_2m,apparent_temperature,pressure_msl,cloud_cover,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m"
+
+          # Construct the API URL
+          API_URL="https://api.open-meteo.com/v1/forecast?latitude=31.2222&longitude=121.4581¤t=${CURRENT_VARS}&timezone=auto"
+
+          # Define the output file name
+          OUTPUT_FILE="current_weather.json"
+
+          echo "Fetching current weather from $API_URL"
+          # Use curl: -f fails silently on server errors but returns error code, -s silent, -L follow redirects
+          curl -fsL "$API_URL" -o "$OUTPUT_FILE"
+
+          # Check if curl succeeded and the file is not empty
+          if [ $? -ne 0 ] || [ ! -s "$OUTPUT_FILE" ]; then
+            echo "Error: curl command failed or downloaded file is empty."
+            # Optional: Log the response if it exists to see API error message
+            [ -f "$OUTPUT_FILE" ] && echo "--- API Response ---" && cat "$OUTPUT_FILE"
+            exit 1
+          fi
+          echo "Current weather data saved to $OUTPUT_FILE"
+
+      - name: Commit and push if current data changed
+        run: |
+          set -e
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+          OUTPUT_FILE="current_weather.json" # Ensure this matches the file saved above
+
+          # Check git status. If the output file hasn't changed, exit gracefully.
+          if git diff --quiet "$OUTPUT_FILE"; then
+            echo "No changes detected in $OUTPUT_FILE. Nothing to commit."
+            exit 0 # Exit successfully
+          fi
+
+          # If there are changes, add, commit, and push
+          echo "Changes detected in $OUTPUT_FILE. Committing..."
+          git add "$OUTPUT_FILE"
+          # Use date command for a timestamp in the commit message
+          git commit -m "Update current weather data - $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          git push
+          echo "Current weather data committed and pushed."
