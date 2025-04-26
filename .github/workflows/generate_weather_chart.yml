@@ -3,7 +3,7 @@ name: Generate Weather Chart
 on:
   # Option 1: Run on a schedule (e.g., 15 minutes after the fetch workflow)
   schedule:
-    - cron: '15 0 * * *' # Runs daily at 00:15 UTC
+    - cron: '15 16 * * *' # Runs daily at 00:15 UTC
 
   # Option 2: Trigger after the fetch workflow completes (if they are in the same repo)
   # workflow_run:
