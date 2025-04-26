@@ -4,7 +4,7 @@ on:
   schedule:
     # Example: Runs daily 15 minutes past midnight UTC
     # Adjust timing relative to your data fetch workflow
-    - cron: '15 0 * * *'
+    - cron: '15 16 * * *'
   # Option: Trigger after the fetch workflow completes (if in the same repo)
   # workflow_run:
   #   workflows: ["Fetch Weather Data"] # Replace with the actual name of your fetch workflow
