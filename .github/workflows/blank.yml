@@ -6,7 +6,7 @@ on:
 
   # Runs the workflow automatically every day at midnight UTC
   schedule:
-    - cron: '5 50 * * *' # Runs daily at 00:00 UTC
+    - cron: '50 5 * * *' # Runs daily at 00:00 UTC
 
 jobs:
   fetch_and_commit_weather:
