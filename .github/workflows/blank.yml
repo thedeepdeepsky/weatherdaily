@@ -46,9 +46,7 @@ jobs:
           OUTPUT_FILE="weather_data.json"
 
           # Check git status. If there are no changes to the file, exit gracefully.
-          if git diff --quiet "$OUTPUT_FILE"; then
-            echo "No changes detected in $OUTPUT_FILE. Nothing to commit."
-            exit 0 # Exit successfully
+          
           fi
 
           # If there are changes, add, commit, and push
