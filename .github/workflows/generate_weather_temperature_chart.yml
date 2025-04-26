@@ -51,7 +51,7 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
-          OUTPUT_CHART="weather_chart.png"
+          OUTPUT_CHART="weather_chart_temperature.png"
 
           # Check if the chart file exists first
           if [ ! -f "$OUTPUT_CHART" ]; then
