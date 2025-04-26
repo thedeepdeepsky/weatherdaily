@@ -47,7 +47,6 @@ jobs:
 
           # Check git status. If there are no changes to the file, exit gracefully.
           
-          fi
 
           # If there are changes, add, commit, and push
           echo "Changes detected in $OUTPUT_FILE. Committing..."
